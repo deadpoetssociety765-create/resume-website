@@ -113,7 +113,8 @@
       <div class="wrap">
         <div class="resume-bar" id="resume-top">
           <h2>Resume</h2>
-          <a class="button" href="resume.pdf" download="Ajay-J-Resume.pdf">Download my resume (PDF)</a>
+          <a class="button" id="resume-download" href="resume.pdf" download="Ajay-J-Resume.pdf">Download my resume (PDF)</a>
+          <span class="download-status" id="resume-download-status" role="status" aria-live="polite"></span>
         </div>
 
         <section id="resume" aria-label="Resume">
@@ -205,5 +206,33 @@
 
   </main>
 
+  <script>
+    const resumeDownload = document.getElementById("resume-download");
+    const resumeDownloadStatus = document.getElementById("resume-download-status");
+
+    resumeDownload.addEventListener("click", async (event) => {
+      event.preventDefault();
+      resumeDownloadStatus.textContent = "";
+
+      try {
+        const response = await fetch(resumeDownload.href);
+        if (!response.ok) {
+          throw new Error(`Resume request failed with status ${response.status}`);
+        }
+
+        const resumeUrl = URL.createObjectURL(await response.blob());
+        const downloadLink = document.createElement("a");
+        downloadLink.href = resumeUrl;
+        downloadLink.download = resumeDownload.download;
+        document.body.append(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+        window.setTimeout(() => URL.revokeObjectURL(resumeUrl), 1000);
+      } catch (error) {
+        console.error("Unable to download the resume.", error);
+        resumeDownloadStatus.textContent = "The resume couldn't be downloaded. Please try again.";
+      }
+    });
+  </script>
 </body>
 </html>

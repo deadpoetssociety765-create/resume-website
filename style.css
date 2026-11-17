@@ -127,6 +127,8 @@ nav {
   margin: 0 auto var(--s2);
 }
 .resume-bar h2 { margin: 0; }
+.download-status { flex-basis: 100%; margin: 0; color: var(--muted); font-size: 0.9375rem; }
+.download-status:empty { display: none; }
 #resume {
   max-width: 794px;
   margin: 0 auto;
